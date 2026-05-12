@@ -65,3 +65,35 @@ SIGN_STR="actual_amount=1.59&amount=10.735&block_transaction_id=xxx&order_id=xxx
 echo -n "$SIGN_STR" | md5sum
 # 比对结果是否等于回调中的 signature
 ```
+
+## 7. 前端充值页面显示"尚未启用在线充值"
+
+**现象：** 后端代码都配好了，充值接口也能调通，但前端充值页面显示"尚未启用在线充值"，看不到 USDT 支付选项。
+
+**原因：** 前端 `recharge-form-card.tsx` 中判断是否显示充值表单的 `hasConfigurableTopup` 变量没有包含 `enable_bepusdt_topup`。
+
+**文件：** `web/default/src/features/wallet/components/recharge-form-card.tsx`
+
+**修复（第127-132行）：**
+```tsx
+// 修改前
+const hasConfigurableTopup =
+    topupInfo?.enable_online_topup ||
+    topupInfo?.enable_stripe_topup ||
+    enableWaffoTopup ||
+    enableWaffoPancakeTopup
+
+// 修改后 - 加一行 enable_bepusdt_topup
+const hasConfigurableTopup =
+    topupInfo?.enable_online_topup ||
+    topupInfo?.enable_stripe_topup ||
+    topupInfo?.enable_bepusdt_topup ||   // ← 新增
+    enableWaffoTopup ||
+    enableWaffoPancakeTopup
+```
+
+**修复后重新构建前端：**
+```bash
+cd web/default
+bun run build
+```

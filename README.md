@@ -79,11 +79,13 @@ BEpusdtMinTopUp=10
 BEpusdtExchangeRate=7.3
 ```
 
-### 第 3 步：注册路由
+### 第 3 步：注册路由 + 修改前端判断
+
+**① 注册后端路由**
 
 在 NewAPI 的路由文件（如 `router/api-router.go`）中添加以下两处：
 
-**① 公开回调路由**（放在无需认证的公共路由区）：
+**公开回调路由**（放在无需认证的公共路由区）：
 
 ```go
 apiRouter.POST("/payment/bepusdt/callback", controller.BEpusdtCallback)
@@ -91,10 +93,39 @@ apiRouter.POST("/payment/bepusdt/callback", controller.BEpusdtCallback)
 apiRouter.POST("/bepusdt/webhook", controller.BEpusdtCallback)
 ```
 
-**② 用户端充值路由**（放在需要用户认证的路由组中）：
+**用户端充值路由**（放在需要用户认证的路由组中）：
 
 ```go
 selfRoute.POST("/bepusdt/pay", middleware.CriticalRateLimit(), controller.RequestBEpusdt)
+```
+
+**② 修改前端充值页面判断条件**
+
+**文件：** `web/default/src/features/wallet/components/recharge-form-card.tsx`
+
+在 `hasConfigurableTopup` 中添加 `enable_bepusdt_topup`，否则前端充值页面会显示"尚未启用在线充值"：
+
+```tsx
+// 修改前（第127行）
+const hasConfigurableTopup =
+    topupInfo?.enable_online_topup ||
+    topupInfo?.enable_stripe_topup ||
+    enableWaffoTopup ||
+    enableWaffoPancakeTopup
+
+// 修改后 - 加一行
+const hasConfigurableTopup =
+    topupInfo?.enable_online_topup ||
+    topupInfo?.enable_stripe_topup ||
+    topupInfo?.enable_bepusdt_topup ||   // ← 新增！否则 USDT 按钮不显示
+    enableWaffoTopup ||
+    enableWaffoPancakeTopup
+```
+
+修改后重新构建前端：
+```bash
+cd web/default
+bun run build
 ```
 
 ## 集成内容清单
