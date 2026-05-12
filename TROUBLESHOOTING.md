@@ -97,3 +97,24 @@ const hasConfigurableTopup =
 cd web/default
 bun run build
 ```
+
+## 8. 充值成功但余额没增加（配额为 0）
+
+**现象：** 回调日志显示"充值成功"，但用户余额不变。
+
+**原因：** `topup_bepusdt.go:104-109` 把充值金额除以 `QuotaPerUnit(500000)`，10/500000=0。
+
+**修复文件：** `controller/topup_bepusdt.go` 第 265 行
+
+**修改前：**
+```go
+err = model.IncreaseUserQuota(topUp.UserId, int(topUp.Amount), true)
+// topUp.Amount = 0 → 加0配额
+```
+
+**修改后：**
+```go
+// 用法币金额 × QuotaPerUnit / 汇率 重新计算
+quotaToAdd := int(float64(topUp.Money) / setting.BEpusdtExchangeRate * common.QuotaPerUnit)
+err = model.IncreaseUserQuota(topUp.UserId, quotaToAdd, true)
+```

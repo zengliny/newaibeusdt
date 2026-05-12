@@ -238,6 +238,10 @@ func BEpusdtCallback(c *gin.Context) {
 
 	logger.LogInfo(c.Request.Context(), fmt.Sprintf("BEpusdt 金额校验通过 order_id=%s expected_usdt=%.4f actual_usdt=%.4f", req.OrderID, expectedUSDT, actualAmount))
 
+	// 计算配额：用法币金额 / 汇率 = USDT金额 x QuotaPerUnit
+	// 不能用 topUp.Amount（它已被除以 QuotaPerUnit 可能为0）
+	quotaToAdd := int(float64(topUp.Money) / setting.BEpusdtExchangeRate * common.QuotaPerUnit)
+
 	topUp.TradeNo = req.TradeID
 	topUp.Status = common.TopUpStatusSuccess
 	topUp.CompleteTime = time.Now().Unix()
@@ -247,7 +251,7 @@ func BEpusdtCallback(c *gin.Context) {
 		return
 	}
 
-	if err := model.IncreaseUserQuota(topUp.UserId, int(topUp.Amount), true); err != nil {
+	if err := model.IncreaseUserQuota(topUp.UserId, quotaToAdd, true); err != nil {
 		logger.LogError(c.Request.Context(), fmt.Sprintf("BEpusdt 发放配额失败 user_id=%d order_id=%s amount=%d error=%q", topUp.UserId, req.OrderID, topUp.Amount, err.Error()))
 		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "发放配额失败"})
 		return
