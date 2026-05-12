@@ -71,7 +71,7 @@
   │       amount: 1.37,
   │       trade_type: "usdt.trc20",
   │       fiat: "CNY",
-  │       address: "TZGm3kFjQpEimu..."  // 指定地址模式！
+  │       address: "<YOUR_TRC20_WALLET>"  // 指定地址模式！
   │     }
   ├─ 5. 保存订单到数据库（status=pending）
   └─ 6. 返回 payment_url

@@ -66,7 +66,7 @@ func TestGenerateSignature(t *testing.T) {
 // TestVerifySignature 测试签名验证
 func TestVerifySignature(t *testing.T) {
 	client := NewClient(
-		"https://bepusdt.ai-key.top",
+		"https://your-bepusdt-domain.com",
 		"TEST_TOKEN",
 		"https://example.com/callback",
 		"https://example.com/return",

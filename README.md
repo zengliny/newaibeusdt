@@ -58,13 +58,13 @@ cp -r src/pkg/bepusdt                  /path/to/new-api/pkg/
 BEpusdtEnabled=true
 
 # BEpusdt 服务地址
-BEpusdtAPIURL=https://bepusdt.ai-key.top
+BEpusdtAPIURL=https://your-bepusdt-domain.com
 
 # BEpusdt 对接令牌（从 BEpusdt 后台获取）
-BEpusdtAPIToken=your_api_token_here
+BEpusdtAPIToken=<YOUR_API_TOKEN>
 
 # 你的 USDT TRC20 收款地址（指定地址模式，钱直接进你钱包）
-BEpusdtWalletAddress=TZGm3kFjQpEimu6i632M77KpiMip3J9gws
+BEpusdtWalletAddress=<YOUR_TRC20_WALLET>
 
 # 交易类型（默认 usdt.trc20）
 BEpusdtTradeType=usdt.trc20

@@ -14,7 +14,7 @@ import (
 
 // Config BEpusdt 配置
 type Config struct {
-	APIURL       string // API 地址，如 https://bepusdt.ai-key.top
+	APIURL       string // API 地址，如 https://your-bepusdt-domain.com
 	APIToken     string // 对接令牌
 	NotifyURL    string // 回调通知地址
 	RedirectURL  string // 支付成功跳转地址

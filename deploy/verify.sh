@@ -1,13 +1,13 @@
 #!/bin/bash
 # BEpusdt 支付集成验证脚本
 # 用法: bash deploy/verify.sh <api_token> <wallet_address>
-# 示例: bash deploy/verify.sh "5AED65D847BA012E38799BCE659FC345" "TZGm3kFjQpEimu6i632M77KpiMip3J9gws"
+# 示例: bash deploy/verify.sh "<YOUR_API_TOKEN>" "<YOUR_WALLET_ADDRESS>"
 
 set -e
 
 TOKEN="${1:-$BEpusdtAPIToken}"
 WALLET="${2:-$BEpusdtWalletAddress}"
-API_URL="${BEpusdtAPIURL:-https://bepusdt.ai-key.top}"
+API_URL="${BEpusdtAPIURL:-https://your-bepusdt-domain.com}"
 
 if [ -z "$TOKEN" ]; then
   echo "❌ 请提供 API Token"
